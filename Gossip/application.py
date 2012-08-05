@@ -1,7 +1,5 @@
 '''
-Created on Jul 30, 2012
-
-@author: patrick
+@author: Patrick Rockenschaub
 '''
 
 import simplejson
@@ -19,6 +17,19 @@ checker = None
 def startgossip():
     def metahandler( conv, msg ):
     #--------------------------------------------------------------------------
+        """
+        Handle the connectiono establishment. 
+        
+        Each side starts by sending their known babblers encoded as JSON data. Parse this
+        data using simplejson and load them one by one by calling 'loadbabbler' method.
+        
+        After the babblers have been loaded they are stored in the database and a request
+        for a update of the service list is sended.
+        
+        :param conv: conversation instance from which the message has been received
+        :param msg: actual message data as string
+        """
+        
         ssldebug("Synchronizing babblers with %s" % conv.id)
         
         table = simplejson.loads(msg)
@@ -35,12 +46,32 @@ def startgossip():
     
     def servupdhandler( conv, msg ):
     #--------------------------------------------------------------------------
+        """
+        Handles a incoming service update.
+        
+        The incoming service data will be stored in a couchDB document with same 
+        name as the babbler identifier.
+        
+        :param conv: conversation instance from which the message has been received
+        :param msg: actual message data as string
+        """
+        
         if conv.id != babbler.myid:
             servdb.write(conv.id, msg)
     #--------------------------------------------------------------------------  
     
     def servreqhandler( conv, msg ):
     #--------------------------------------------------------------------------
+        """
+        Handle an incoming service request by replying own service list.
+        
+        Read the own service list from database and send it back to the
+        requester.
+        
+        :param conv: conversation instance from which the message has been received
+        :param msg: actual message data as string
+        """
+        
         services = servdb.read("self")
         if conv.status == Conversation.GOING_ON:
             conv.senddata("SUPD", conv.getmessagesequence(), services)
@@ -52,21 +83,7 @@ def startgossip():
         Load configuration file in JSON notation specifying debug options, 
         list of host/port which to listen to and paths to certification files.
         
-        Example configuration data:
-        
-        {
-            "debug":1,
-            "verbose":1,
-            "maxconv":25,
-            "port":[50000],
-            "host":["localhost"],
-        
-            "certificates":{
-                "key":"privatkey.pem",
-                "certificate":"x509certificate.pem",
-                "ca":"CAcertificate.pem"
-            }
-        }
+        For example configuration data see 'database_setup.py'.
         
         Anything missing will cause error the ensure a proper configuration 
         in order to be able to work correctly.
@@ -105,7 +122,7 @@ def startgossip():
         """
         Read saved babbler table from database and load them into 'self.babblers'.
         
-        Calls 'self.loadbabblers' to process the data received from the disk.
+        Calls 'babbler.loadbabblers' to process the data received from the disk.
         """
         db = CouchDBManager("localhost", "5984", "gossip_crackertable")
         try:            
@@ -148,6 +165,15 @@ def startgossip():
     
     def processserviceupdate( document ):
     #--------------------------------------------------------------------------
+        """
+        Handle a update of own service list.
+        
+        Will be called by couchDB change notifier if the own service list is altered
+        and sends service updates to all known babblers.
+        
+        :param document: document which has been altered (passed by CouchDBHandler.watchdbthreading).
+        """
+        
         try:            
             babbler.babblelock.acquire()
             services = servdb.read(document)
@@ -174,6 +200,16 @@ def startgossip():
 def startpolicing():
     def processserviceupdate( document ):
     #--------------------------------------------------------------------------
+        """
+        Handle a update of own service list.
+        
+        Will be called by couchDB change notifier if a babbler's service list is altered
+        by receiving a service update. New services are simply queued in the supervisor 
+        instance and no longer existing services are removed.
+        
+        :param document: document which has been altered (passed by CouchDBHandler.watchdbthreading).
+        """
+        
         try:
             services = simplejson.loads(watchDB.read(document))["services"]
             for index in services:
