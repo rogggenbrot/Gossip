@@ -27,6 +27,15 @@ INSTALLING
 
 Assure that you installed all required software and libraries on your machine. For instructions on installing couchDB visit following site: http://guide.couchdb.org/editions/1/en/source.html
 
+Download the latest tar ball from https://github.com/rogggenbrot/Gossip/downloads and run following commands:
+
+cd downloaddist
+tar xzf gossip-X.X.X.tar.gz
+cd gossip-X.X.X
+sudo python setup.py install
+
+All libraries are now added to your python path. The sample application is copied to /usr/local/bin. If you want to use it, copy it to a destination folder. Make sure you create a 'certificates' and a 'certificates/known' folder in the same directory. 
+
 To setup all required databases ensure couchDB is running and execute the 'database_setup.py' script.
 
 You also need to create certificates in order to ensure authentication of the peers. For tutorials on OpenSSL visit following site: http://www.online-tutorials.net/security/openssl-tutorial/tutorials-t-69-207.html#beispiel-openvpn

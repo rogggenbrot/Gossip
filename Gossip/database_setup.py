@@ -41,7 +41,7 @@ if __name__ == '__main__':
                             '"key": "certificates/localserv.pem",' + \
                             '"certificate": "certificates/localservcert.pem",' + \
                             '"ca": "certificates/astaro-ca.pem"' + \
-                        '},' + \
+                        '}' + \
                     '}'
     
     ssldebug(sampleconfig)
