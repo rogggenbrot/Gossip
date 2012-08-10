@@ -326,7 +326,7 @@ class Service( object ):
         self.timeout = 0
         self.pattern = ""
         self.lastschedule = time.time()
-        self.laststatus = False
+        self.laststatus = -1
         self.interval = 999999999       # unknown service should only be
                                         # controlled once in order to 
                                         # indicate the missing specification
@@ -437,7 +437,7 @@ class HTTPService( Service ):
         """
         try:
             response = urllib.urlopen("http://" + self.host + ":" + str(self.port)).getcode()
-            self.laststatus = str(response).startswith(self.pattern)
+            self.laststatus = response == self.pattern
         except KeyboardInterrupt:
             raise
         except:

@@ -215,7 +215,7 @@ def startpolicing():
             for index in services:
                 service = services[index]
                 uid = "%s/%s" % (document, index)
-                checker.queueservice(uid, service["proto"], service["ipv4"], service["port"], service["timeout"], "200", 200 )
+                checker.queueservice(uid, service["proto"], service["ipv4"], service["port"], service["timeout"], 200, 180 )
         except KeyboardInterrupt:
             raise
         except:
