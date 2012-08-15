@@ -18,7 +18,7 @@ def startgossip():
     def metahandler( conv, msg ):
     #--------------------------------------------------------------------------
         """
-        Handle the connectiono establishment. 
+        Handle the connection establishment. 
         
         Each side starts by sending their known babblers encoded as JSON data. Parse this
         data using simplejson and load them one by one by calling 'loadbabbler' method.
