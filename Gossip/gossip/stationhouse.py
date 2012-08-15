@@ -184,7 +184,7 @@ class Supervisor(object):
                 results += '["%s", %f, %s, %d],' % \
                               (self.services[s][1].uid, self.services[s][1].lastschedule, int(self.services[s][1].laststatus), self.services[s][1].timeout) 
                               
-            return "[ %s ]" % results[:len(results)-1]
+            return '{"results":[ %s ]}' % results[:len(results)-1]
         finally:
             self.release()
     #--------------------------------------------------------------------------  

@@ -160,8 +160,9 @@ class CouchDBManager( object ):
         """
         content = simplejson.loads(content)
         document = couchdb.Document()
+        document = content
         document["_id"] = uid
-        
+                
         while True:
             try:
                 rev = self.database.get(uid)
@@ -170,10 +171,6 @@ class CouchDBManager( object ):
                     rev = rev["_rev"]
                     document["_rev"] = rev
                 
-                for obj in content:
-                    if obj != "_id" and obj != "_rev":
-                        document[obj] = content[obj]
-                        
                 self.database.save(document)
                 break
             except couchdb.http.ResourceConflict:
