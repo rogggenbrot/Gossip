@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:title="Database Settings">
+        <EditTextPreference android:key="hostname" android:title="Host Name" android:summary="Host from which to fetch contact data." android:dialogTitle="Set host"/>
+        <EditTextPreference android:key="username" android:title="Username" android:summary="Set username for couchDB." android:dialogTitle="Set username"/>
+        <EditTextPreference android:key="password" android:title="Password" android:summary="Set admin passwort for couchDB." android:password="true" android:dialogTitle="Set password"/>
+        <ListPreference android:key="timeout" android:summary="How long to try to connect to database." android:title="Connection Timeout" android:entries="@array/timeout_names" android:entryValues="@array/timeout_names" android:dialogTitle="Select timeout (in sec)"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Gossip Settings">
+        <ListPreference android:key="interval" android:summary="Set frequency of fetching services." android:title="Polling interval" android:entries="@array/timeout_names" android:entryValues="@array/timeout_names" android:dialogTitle="Select poll interval (in min)"/>
+    	<CheckBoxPreference android:key="full_service_name" android:summary="Show full service names." android:title="Service names"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

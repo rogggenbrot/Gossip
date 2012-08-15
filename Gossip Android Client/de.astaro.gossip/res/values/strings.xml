@@ -1,0 +1,28 @@
+<resources>
+
+    <string name="app_name">Gossip</string>
+    <string name="title_activity_service_overview">Gossip</string>
+    <string name="monitor_menu">Monitor</string>
+    <string name="update_menu">Hosts</string>
+    <string name="refresh_button">Refresh</string>
+    <string name="title_activity_update">Hosts</string>
+    <string name="service_name">Fetch Service Results</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="action_string_notify">de.astaro.gossip.NOTIFY</string>
+    <string name="action_string_start">de.astaro.gossip.START_SERVICE</string>
+    <string name="no_items">No items available.\n\n Maybe the seed host is not set or host list has not been refreshed yet.</string>
+
+    <string-array name="item_menu">
+        <item>Delete</item>
+    </string-array>
+
+    <string name="title_activity_preferences">Preferences</string>
+    <string name="settings_menu">Settings</string>
+    <string-array name="timeout_names">
+        <item >1</item>
+        <item >3</item>
+        <item >5</item>
+        <item >10</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	    <item 
+	        android:id="@+id/hosts" 
+	        android:showAsAction="ifRoom" 
+	        android:title="@string/update_menu">
+	    </item>
+	    <item 
+        android:id="@+id/settings" 
+        android:showAsAction="ifRoom" 
+        android:icon="@android:drawable/ic_menu_preferences">
+	    </item>
+</menu>
