@@ -5,6 +5,7 @@ package de.astaro.gossip.data;
  */
 public class Host implements Comparable<Host>{
 	private long id;
+	private String name;
 	private String address;
 	
 	public long getId(){
@@ -13,6 +14,14 @@ public class Host implements Comparable<Host>{
 	
 	public void setId(long id){
 		this.id = id;
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	public void setName(String name){
+		this.name = name;
 	}
 	
 	public String getAddress(){
@@ -25,10 +34,10 @@ public class Host implements Comparable<Host>{
 	
 	@Override 
 	public String toString(){
-		return address; 
+		return name; 
 	}
 
 	public int compareTo(Host another) {
-		return address.compareTo(another.getAddress());
+		return name.compareTo(another.getName());
 	}
 }

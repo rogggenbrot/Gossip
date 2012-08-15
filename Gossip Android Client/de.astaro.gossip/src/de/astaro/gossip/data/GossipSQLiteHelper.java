@@ -7,10 +7,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class GossipSQLiteHelper extends SQLiteOpenHelper{
 	
 	private static final String DATABASE_NAME = "gossip.db";
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 4;
 	
 	public static final String TABLE_HOST = "host";
 	public static final String HOST_COLUMN_ID = "_id";
+	public static final String HOST_COLUMN_NAME = "name";
 	public static final String HOST_COLUMN_ADDRESS = "address";
 	
 	public static final String TABLE_SERVICE = "service";
@@ -21,6 +22,7 @@ public class GossipSQLiteHelper extends SQLiteOpenHelper{
 			
 	private static final String DATABASE_CREATE_HOST = "create table "
 			+ TABLE_HOST + "(" + HOST_COLUMN_ID + " integer primary key, "
+			+ HOST_COLUMN_NAME + " text not null,"
 			+ HOST_COLUMN_ADDRESS + " text not null);";
 	
 	private static final String DATABASE_CREATE_SERVICE = "create table "

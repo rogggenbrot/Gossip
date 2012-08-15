@@ -13,6 +13,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.astaro.gossip.data.Host;
+
 import android.util.Log;
 
 
@@ -22,6 +24,7 @@ public class CouchDBManager {
 	private String user;
 	private String passwd;
 	private int htmlTimeout;
+	private boolean useAuthentification = false;
 	
 	/*
 	 * Initialize manager with target host, user settings and a timeout for the 
@@ -29,32 +32,41 @@ public class CouchDBManager {
 	 */
 	public CouchDBManager(String host, String user, String passwd, int htmlTimeout){
 		this.host = host;
-		this.user = user;
-		this.passwd = passwd;
 		this.htmlTimeout = htmlTimeout;
+		if(!user.equals("") && !passwd.equals("")){
+			this.user = user;
+			this.passwd = passwd;
+			this.useAuthentification = true;
+		}
 	}
 	
 	/*
 	 * Read all known peer addresses from the remote couchDB database.
 	 * All information must be stored in the 'gossip_crackertable' database.
 	 */
-	public List<String> readHostNetwork(){
-		List<String> hosts = new ArrayList<String>();
+	public List<Host> readHostNetwork(){
+		List<Host> hosts = new ArrayList<Host>();
 		String network = doRead("gossip_crackertable", "_all_docs");
 		
 		JSONArray list;
-		JSONObject single;
+		JSONObject docName;
 		try{
 			list = (JSONArray)new JSONObject(network).get("rows");
 			
 			for(int i = 0; i < list.length(); i++){
-				single = (JSONObject)list.get(i);
+				docName = (JSONObject)list.get(i);
 				
-				if(single.getString("id").equals("self")){
-					hosts.add(host);
+				String single_doc = doRead("gossip_crackertable", docName.getString("id"));
+				JSONArray addresses = new JSONObject(single_doc).getJSONArray("host");
+				Host newHost = new Host();
+				newHost.setAddress(addresses.getString(0));
+				
+				if(docName.getString("id").equals("self")){
+					newHost.setName(host);
 				}else{
-					hosts.add(single.getString("id"));
+					newHost.setName(docName.getString("id"));
 				}
+				hosts.add(newHost);
 			}
 		}catch(JSONException e){
 			Log.w("CouchDB", "Unable to parse host list.");
@@ -78,7 +90,6 @@ public class CouchDBManager {
 			for(int i = 0; i < list.length(); i++){
 				single = (JSONArray)list.get(i);
 				
-				
 				if(single.getInt(2) == 0){
 					services.put(single.getString(0), 10001);
 				}else{
@@ -86,7 +97,7 @@ public class CouchDBManager {
 				}
 			}
 		}catch(JSONException e){
-			Log.w("CouchDB", "Unable to parse service list.");
+			Log.w("CouchDB", "Unable to parse service list of " + host + ".");
 		}
 		
 		return services;
@@ -99,10 +110,13 @@ public class CouchDBManager {
     	BufferedReader reader = null;
     	String content = "";
     	try{
-    		
-    		URL url = new URL(String.format("http://%s:%s@%s:5984/%s/%s", user, passwd,
+    		URL url;
+    		if(useAuthentification){
+    			url = new URL(String.format("http://%s:%s@%s:5984/%s/%s", user, passwd,
     												host, database, document));
-    		
+    		}else{
+    			url = new URL(String.format("http://%s:5984/%s/%s", host, database, document));
+    		}
     		HttpURLConnection con = (HttpURLConnection) url.openConnection();
     		con.setConnectTimeout(htmlTimeout);
     	

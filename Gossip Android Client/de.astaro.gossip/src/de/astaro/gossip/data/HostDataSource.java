@@ -14,6 +14,7 @@ public class HostDataSource {
 	private SQLiteDatabase database;
 	private GossipSQLiteHelper dbHelper;
 	private String[] columns = { GossipSQLiteHelper.HOST_COLUMN_ID, 
+									GossipSQLiteHelper.HOST_COLUMN_NAME,
 									GossipSQLiteHelper.HOST_COLUMN_ADDRESS};
 	
 	/*
@@ -43,7 +44,8 @@ public class HostDataSource {
 	private Host cursorToHost(Cursor cursor) {
 		Host host = new Host();
 		host.setId(cursor.getLong(0));
-		host.setAddress(cursor.getString(1));
+		host.setName(cursor.getString(1));
+		host.setAddress(cursor.getString(2));
 		return host;
 	}
 	
@@ -51,19 +53,19 @@ public class HostDataSource {
 	 * Check if host already in database. If this is not the case, create it and
 	 * return a instance of that host.
 	 */
-	public Host createHost(String address){
+	public Host createHost(String name, String address){
 		ContentValues values = new ContentValues();
+		values.put(GossipSQLiteHelper.HOST_COLUMN_NAME, name);
 		values.put(GossipSQLiteHelper.HOST_COLUMN_ADDRESS, address);
 		
 		Cursor cursor = database.query(GossipSQLiteHelper.TABLE_HOST, columns, 
-				GossipSQLiteHelper.HOST_COLUMN_ADDRESS + " = '" + address + "'", 
+				GossipSQLiteHelper.HOST_COLUMN_NAME + " = '" + name + "'", 
 				null, null, null, null);
 		
 		if(cursor.moveToFirst() != false){
 			return null;
 		}
 		
-		Log.v("createHost", address + " wird angelegt");
 		long insertId = database.insert(GossipSQLiteHelper.TABLE_HOST, null, values);
 		cursor = database.query(GossipSQLiteHelper.TABLE_HOST, columns, 
 										GossipSQLiteHelper.HOST_COLUMN_ID + " = " + insertId, 
@@ -79,12 +81,12 @@ public class HostDataSource {
 	 * Create a list of hosts by creating each host individual and returning 
 	 * a list of instances. Only newly created hosts will be returned.
 	 */
-	public List<Host> createHosts(List<String> addresses){
+	public List<Host> createHosts(List<Host> addresses){
 		List<Host> hosts = new ArrayList<Host>();
-		for(String address : addresses){
-			Host h = createHost(address);
-			if(h != null){
-				hosts.add(h);
+		for(Host h : addresses){
+			Host a = createHost(h.getName(), h.getAddress());
+			if(a != null){
+				hosts.add(a);
 			}
 		}
 		

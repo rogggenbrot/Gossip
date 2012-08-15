@@ -6,6 +6,7 @@ import de.astaro.gossip.background.RefreshServiceListReceiver;
 import de.astaro.gossip.data.*;
 import de.astaro.gossip.network.*;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.app.ListActivity;
 import android.app.NotificationManager;
@@ -43,6 +44,10 @@ public class UpdateActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update);
+        
+        StrictMode.ThreadPolicy policy = new StrictMode.
+        		ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy); 
         
         hostDataSource = new HostDataSource(this);
         hostDataSource.open();
@@ -157,7 +162,7 @@ public class UpdateActivity extends ListActivity {
         ContextMenuInfo menuInfo) {
 	    if (v.getId()==android.R.id.list) {
 	    	AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-		    menu.setHeaderTitle(allHosts.get(info.position).getAddress());
+		    menu.setHeaderTitle(allHosts.get(info.position).getName());
 		    String[] menuItems = getResources().getStringArray(R.array.item_menu);
 		      
 		    for (int i = 0; i<menuItems.length; i++) {
@@ -200,7 +205,7 @@ public class UpdateActivity extends ListActivity {
     	String password = preferences.getString("password", "n/a");
     	int timeout = Integer.parseInt(preferences.getString("timeout", "1")) * 1000;
     	couchDB = new CouchDBManager(hostname, username, password, timeout);
-    	List<String> network = couchDB.readHostNetwork();
+    	List<Host> network = couchDB.readHostNetwork();
     	
     	allHosts.addAll(hostDataSource.createHosts(network)); 
     	hostListAdapter.notifyDataSetChanged();

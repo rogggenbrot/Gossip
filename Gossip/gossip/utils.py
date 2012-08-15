@@ -14,6 +14,9 @@ class CouchDBManager( object ):
     any document defined.
     """
     
+    username = "android"
+    password = "android"
+
     def getdocumentlist( self ):
     #--------------------------------------------------------------------------
         """
@@ -38,7 +41,7 @@ class CouchDBManager( object ):
         :param database: name of the database 
         """
         
-        url = "http://%s:%s" % (host, str(port))
+        url = "http://%s:%s@%s:%s" % (self.username, self.password, host, str(port))
         try:
             self.database = couchdb.Database("%s/%s" % (url, database))
             self.database.info()
