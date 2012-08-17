@@ -58,6 +58,7 @@ def startgossip():
         
         if conv.id != babbler.myid:
             servdb.write(conv.id, msg)
+            servdb.compact()
     #--------------------------------------------------------------------------  
     
     def servreqhandler( conv, msg ):
@@ -151,6 +152,7 @@ def startgossip():
         try:
             for identifier in babbler.babblers:
                 db.write(identifier, babbler.getbabbler(identifier).contact.tojson())
+                db.compact()
                 
                 if babbler.getbabbler(identifier).x509 != None:
                     babbler.getbabbler(identifier).x509.save("%s/%s.pem" % (Babblemouth.CERTIFICATE_FOLDER, identifier), X509.FORMAT_PEM)
@@ -201,7 +203,7 @@ def startpolicing():
     def processserviceupdate( document ):
     #--------------------------------------------------------------------------
         """
-        Handle a update of own service list.
+        Handle a update of service list.
         
         Will be called by couchDB change notifier if a babbler's service list is altered
         by receiving a service update. New services are simply queued in the supervisor 
@@ -243,6 +245,7 @@ def startpolicing():
                 checker.checkservice()
             else:
                 resultDB.write("results", checker.getresults())
+                resultDB.compact()
                 time.sleep(wait)
                 ssldebug("%d service(s) currently watched..." % checker.getservicecount())
     finally:

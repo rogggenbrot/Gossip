@@ -17,6 +17,18 @@ class CouchDBManager( object ):
     username = "android"
     password = "android"
 
+    def compact( self ):
+    #--------------------------------------------------------------------------
+        """
+        Compact a database to reduce disk space.
+        
+        Due to couchDB's design attitude to never delete data when updated, a 
+        frequently used database will swell fastly to a large size. Compact
+        deletes obsolete data, just leaving the last data. 
+        """
+        self.database.compact()
+    #--------------------------------------------------------------------------
+
     def getdocumentlist( self ):
     #--------------------------------------------------------------------------
         """

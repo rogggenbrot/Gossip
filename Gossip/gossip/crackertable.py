@@ -537,7 +537,7 @@ class Conversation( object ):
             sock = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
             
             self.s = SSL.Connection(self.context, sock)
-	    self.s.set_post_connection_check_callback(None)
+            self.s.set_post_connection_check_callback(None)
             self.s.connect( ( self.contact.hosts[self.hostindex], self.contact.ports[self.hostindex] ) )
             
         self.x509 = self.s.get_peer_cert()   
@@ -848,7 +848,7 @@ class Conversation( object ):
                     raise
                 except SSL.SSLError:
                     self.status = Conversation.DISMISSING
-                    ssldebug("%s ended becauso of an error during connection" % self.id)
+                    ssldebug("%s ended because of an error during connection" % self.id)
                 except:
                     traceback.print_exc()
                     

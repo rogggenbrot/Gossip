@@ -37,6 +37,7 @@ if __name__ == '__main__':
                         '"maxconv": 25,' + \
                         '"debug": 0,' + \
                         '"verbose": 1,' + \
+                        '"version": 1,' + \
                         '"certificates": {' + \
                             '"key": "certificates/localserv.pem",' + \
                             '"certificate": "certificates/localservcert.pem",' + \
